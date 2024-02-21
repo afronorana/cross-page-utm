@@ -26,12 +26,16 @@ if (Object.keys(utmParams).length > 0) {
 // Step 3: Append UTM Parameters to URLs
 function appendUTMParametersToLinks() {
     const utmParams = {};
-    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].forEach(function (key) {
-        const value = sessionStorage.getItem(key);
-        if (value) {
-            utmParams[key] = value;
+
+    for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key.startsWith("utm_")) {
+            const value = sessionStorage.getItem(key);
+            if (value) {
+                utmParams[key] = value;
+            }
         }
-    });
+    }
 
     const utmQueryString = Object.keys(utmParams).map(key => `${key}=${encodeURIComponent(utmParams[key])}`).join('&');
 
@@ -58,6 +62,7 @@ function appendUTMParametersToLinks() {
         });
     }
 }
+
 
 document.addEventListener("DOMContentLoaded", appendUTMParametersToLinks);
 
